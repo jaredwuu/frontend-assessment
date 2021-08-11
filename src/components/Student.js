@@ -7,7 +7,8 @@ import Tags from './Tags';
 const Student = () => {
     const [showGrades, setShowGrades] = useState(false)
     const [preX, setPreX] = useState(null)
-    const [data, setData] = useState(null);
+    const [data, setData] = useState([]);
+    const n = data.length;
     const [tags, setTags] = useState([])
     const [newTag, setNewTag] = useState('')
     const [keyName, setKeyName] = useState('')
@@ -82,21 +83,26 @@ const Student = () => {
 
     const handleKeyDown = (e, student) => {
       
-        if (e.key === 'Enter' && e.target.value) {
+        if (e.key === 'Enter'&&newTag !==null) {
+            // let tem = [...tags];
+            // tem[parseInt(student.id)-1] = [...tem[parseInt(student.id)-1],newTag]
            
-            setTags(arr =>[...arr, newTag]);
+            //setTags((arr)=>[...arr[student.id],newTag]))
+             setTags(arr =>[...arr, newTag]);
+            //setTags(tem);
             //newTag = null;
+            //student.myTags.push(newTag);
             e.target.value = null;
         }
+        setNewTag(null)
        
     }
 
     const handleAddTag = (student) => {
         //console.log(tags)
-        student.myTags = tags
-        
-        console.log(student.id)
-        console.log(student.myTags)
+        student.myTags = [tags[parseInt(student.id)-1]]      
+       // console.log(student.id)
+        console.log(tags)
     
     }
 
