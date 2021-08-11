@@ -6,6 +6,7 @@ import Tags from './Tags';
 
 const Student = () => {
     const [showGrades, setShowGrades] = useState(false)
+    const [preX, setPreX] = useState(null)
     const [data, setData] = useState(null);
     const [tags, setTags] = useState([])
     const [newTag, setNewTag] = useState('')
@@ -18,54 +19,60 @@ const Student = () => {
             .then((res) => res.json())
             .then(data => {
                 setData(data.students)
-                setDefaultData(data.students)     
+                setDefaultData(data.students)
             });
     }, []);
 
     const handleshowGrades = (x) => {
         if (x.showGrades === undefined) {
             x.showGrades = false;
-            //setShowGrades(true);
         }
-        setShowGrades((showGrades) =>
-            x.showGrades = !showGrades
+        if (x !== preX && showGrades !== x.showGrades) {
+            setShowGrades(x.showGrades);
+        }
 
+
+        setShowGrades(
+            (showGrades) =>
+                x.showGrades = !showGrades
         )
-    
+        setPreX(x);
+        // console.log(showGrades);
+        // console.log(x.showGrades);    
     }
 
     const ave = arr => arr.reduce((a, b) => parseInt(a, 10) + parseInt(b, 10), 0) / arr.length;
 
     const handleNameSearch = (event) => {
         if (event.key === 'Enter') {
-            const filtered = data.filter(student => {
-                return (student.firstName.toLowerCase().includes(keyName.toLowerCase())||student.lastName.toLowerCase().includes(keyName.toLowerCase()))
-            })            
-           // console.log(filtered)
+            const filtered = defaultData.filter(student => {
+                return (student.firstName.toLowerCase().includes(keyName.toLowerCase()) || student.lastName.toLowerCase().includes(keyName.toLowerCase()))
+            })
+            // console.log(filtered)
             setData(filtered);
-            if(keyName==='') setData(defaultData);
+            if (keyName === '') setData(defaultData);
         }
+        // console.log(keyName);
 
     }
 
     const handleTagSearch = (event) => {
         if (event.key === 'Enter') {
-            // const filtered = data.filter(student => {
-            //     return (student.tags.toLowerCase().includes(keyTag.toLowerCase()))
-            // })            
-            console.log(data.tags)
-            // setData(filtered);
-            if(keyName==='') setData(defaultData);
-        }
+            const filtered = defaultData.filter(student => {
+                return (student.myTags.join('-').toLowerCase().includes(keyTag.toLowerCase()))
+            })
 
+            setData(filtered);
+            if (keyTag === '') setData(defaultData);
+        }
     }
 
     const getkeyName = (e) => {
         setKeyName(e.target.value)
-        
+
     }
     const getkeyTag = (e) => {
-        setKeyTag(e.target.value)       
+        setKeyTag(e.target.value)
     }
 
     const Tag = (e) => {
@@ -73,11 +80,24 @@ const Student = () => {
         //console.log(newTag)
     }
 
-    const handleKeyDown = (event, student) => {
-        if (event.key === 'Enter') {
-            setTags(arr => [...arr, newTag]);
-            event.target.value = null;
+    const handleKeyDown = (e, student) => {
+      
+        if (e.key === 'Enter' && e.target.value) {
+           
+            setTags(arr =>[...arr, newTag]);
+            //newTag = null;
+            e.target.value = null;
         }
+       
+    }
+
+    const handleAddTag = (student) => {
+        //console.log(tags)
+        student.myTags = tags
+        
+        console.log(student.id)
+        console.log(student.myTags)
+    
     }
 
 
@@ -87,8 +107,8 @@ const Student = () => {
             <div>
                 <input className="w-full h-8 border-b focus:outline-none focus:ring focus:border-blue-300 px-2" type="text" placeholder='Search by name'
                     onChange={getkeyName} onKeyDown={handleNameSearch} />
-                <input className="w-full h-8 border-b focus:outline-none focus:ring focus:border-blue-300 px-2" type="text" placeholder='Search by tag' 
-                onChange={getkeyTag} onKeyDown={handleTagSearch} />
+                <input className="w-full h-8 border-b focus:outline-none focus:ring focus:border-blue-300 px-2" type="text" placeholder='Search by tag'
+                    onChange={getkeyTag} onKeyDown={handleTagSearch} />
                 <ul className="overflow-y-auto" style={{ height: "480px" }}>
                     {data.map((x) => {
                         return (
@@ -99,7 +119,7 @@ const Student = () => {
                                     </div>
                                     <div className='flex justify-between w-full px-2'>
                                         <div>
-                                            <div className="text-5xl">{(x.firstName).toUpperCase() + " " + (x.lastName).toUpperCase()}</div>
+                                            <div className="text-4xl px-4">{(x.firstName).toUpperCase() + " " + (x.lastName).toUpperCase()}</div>
                                             <div className='px-8'>
                                                 <div>Eamil: {x.email}</div>
                                                 <div>Compant: {(x.company)}</div>
@@ -107,9 +127,9 @@ const Student = () => {
                                                 <div>Average: {ave(x.grades)}%</div>
                                                 <Grades student={x} />
                                                 <Tags tags={tags} student={x} />
-                                                <div className='py-2'>
+                                                <div className='flex py-2'>
                                                     <input type='text' onChange={Tag} onKeyDown={handleKeyDown} className="bg-gray-500 border-b h-8 focus:outline-none focus:ring focus:border-blue-300 " placeholder='Add a tag' />
-
+                                                    <button className='bg-white mx-2 px-2' onClick={handleAddTag(x)}>add Tag</button>
                                                 </div>
                                             </div>
                                         </div>
