@@ -7,10 +7,7 @@ function App() {
     <Frame >   
       <Student />
     </Frame>
-  )
-   
-  
-  
+  ) 
 
 }
 

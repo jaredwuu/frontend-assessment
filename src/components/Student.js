@@ -34,17 +34,15 @@ const Student = () => {
     if (x !== preX && showGrades !== x.showGrades) {
       setShowGrades(x.showGrades);
     }
-
     setShowGrades((showGrades) => (x.showGrades = !showGrades));
     setPreX(x);
   };
 
-  const ave = (arr) =>
-    arr.reduce((a, b) => parseInt(a, 10) + parseInt(b, 10), 0) / arr.length;
+  const ave = (arr) =>arr.reduce((a, b) => parseInt(a, 10) + parseInt(b, 10), 0) / arr.length;
 
   const handleNameSearch = (event) => {
     if (event.key === "Enter") {
-      const filtered = defaultData.filter((student) => {
+      const filtered = data.filter((student) => {
         return (
           student.firstName.toLowerCase().includes(keyName.toLowerCase()) ||
           student.lastName.toLowerCase().includes(keyName.toLowerCase())
@@ -59,7 +57,7 @@ const Student = () => {
 
   const handleTagSearch = (event) => {
     if (event.key === "Enter") {
-      const filtered = defaultData.filter((student) => {
+      const filtered = data.filter((student) => {
         return student.tags
           .join("-")
           .toLowerCase()
@@ -92,19 +90,19 @@ const Student = () => {
         <input
           className="w-full h-8 border-b focus:outline-none focus:ring focus:border-blue-300 px-2"
           type="text"
-          placeholder="Search by name"
+          placeholder="Search by name. Press Enter to search"
           onChange={getkeyName}
           onKeyDown={handleNameSearch}
         />
         <input
           className="w-full h-8 border-b focus:outline-none focus:ring focus:border-blue-300 px-2"
           type="text"
-          placeholder="Search by tag"
+          placeholder="Search by tag. Press Enter to search"
           onChange={getkeyTag}
           onKeyDown={handleTagSearch}
         />
         <ul className="overflow-y-auto" style={{ height: "480px" }}>
-          {data.map((x, index) => {
+          {data.map((x) => {
             
             return (
               <div key={x.id}>
@@ -139,11 +137,8 @@ const Student = () => {
                              onKeyDown={handleKeyDown}
                             className="bg-gray-500 border-b h-8 focus:outline-none focus:ring focus:border-blue-300 "
                             placeholder="Add a tag"
-                          />
-                         
+                          />                         
                         </div>
-
-
                       </div>
                     </div>
                     <div className="my-2">
