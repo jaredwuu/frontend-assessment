@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from "react";
+import SearchBar from "./SearchBar";
 import Grades from "./Grades";
 import Tags from "./Tags";
 
 const Student = () => {
   const [showGrades, setShowGrades] = useState(false);
-  const [preX, setPreX] = useState(null);
-  const [data, setData] = useState([]);
+  const [preX, setPreX] = useState(null);  
   const [newTag, setNewTag] = useState("");
   const [keyName, setKeyName] = useState("");
   const [keyTag, setKeyTag] = useState("");
+  const [data, setData] = useState([]);
   const [defaultData, setDefaultData] = useState(null);
 
   useEffect(() => {
@@ -44,8 +45,7 @@ const Student = () => {
     if (event.key === "Enter") {
       const filtered = data.filter((student) => {
         return (
-          student.firstName.toLowerCase().includes(keyName.toLowerCase()) ||
-          student.lastName.toLowerCase().includes(keyName.toLowerCase())
+          `${student.firstName} ${student.lastName}`.toLowerCase().includes(keyName.trim())
         );
       });
       // console.log(filtered)
@@ -68,6 +68,8 @@ const Student = () => {
     }
   };
 
+
+
   const getkeyName = (e) => {
     setKeyName(e.target.value);
   };
@@ -87,6 +89,8 @@ const Student = () => {
   if (data) {
     return (
       <div>
+        <SearchBar searchFunction = {handleNameSearch} content={`name`}/>
+        <SearchBar searchFunction = {handleTagSearch} content={`tag`}/>
         <input
           className="w-full h-8 border-b focus:outline-none focus:ring focus:border-blue-300 px-2"
           type="text"
